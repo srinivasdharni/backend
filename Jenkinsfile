@@ -41,7 +41,9 @@ pipeline {
         expression { env.TAG_NAME ==~ ".*" }
       }
       steps {
-        echo 'CI'
+         sh 'zip -r backend-${TAG_NAME}.zip static asset-manifest.json index.html robots.txt'
+        sh 'curl -sSf -u "admin:Admin123" -X PUT -T backend-${TAG_NAME}.zip "http://artifactory.sddevops18.online:8081/artifactory/backend/backend-${TAG_NAME}.zip"'
+      
       }
     }
 
