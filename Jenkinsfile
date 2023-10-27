@@ -42,8 +42,12 @@ pipeline {
       }
       steps {
          sh 'zip -r backend-${TAG_NAME}.zip static asset-manifest.json index.html robots.txt'
-        sh 'curl -sSf -u "admin:Admin123" -X PUT -T backend-${TAG_NAME}.zip "http://artifactory.sddevops18.online:8081/artifactory/backend/backend-${TAG_NAME}.zip"'
-      
+        sh 'curl -sSf -u "admin:Admin123" -X PUT -T backend-${TAG_NAME}.zip "http://artifactory.sddevops18.online:8081/artifactory/backend/backend-${TAG_NAME}.zip"'    
+      }
+      steps {
+        sh 'docker build -t 624783896224.dkr.ecr.us-east-1.amazonaws.com/backend:${TAG_NAME} .'
+        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 624783896224.dkr.ecr.us-east-1.amazonaws.com'
+        sh 'docker push 624783896224.dkr.ecr.us-east-1.amazonaws.com/backend:${TAG_NAME}'
       }
     }
 
